@@ -41,14 +41,18 @@ namespace IndyBooks.Controllers
         {
             _db.Writers.Add(writer);
             _db.SaveChanges();
-            Response.StatusCode = 202;
             return Accepted();
         }
 
         // PUT: api/Writer/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(long id, Writer writer)
         {
+            var newWriter = _db.Writers.Single(n => n.Id == id);
+            newWriter.Name = writer.Name;
+            _db.Writers.Update(newWriter);
+            _db.SaveChanges();
+            return Accepted();
         }
 
         // DELETE: api/ApiWithActions/5
