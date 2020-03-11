@@ -31,14 +31,18 @@ namespace IndyBooks.Controllers
         [HttpGet("{id}", Name = "Get")]
         public IActionResult Get(long id)
         {
-            var writer = _db.Writers.Select(w => new { id = w.Id, name = w.Name });
+            var writer = _db.Writers.Select(w => new { id = w.Id, name = w.Name }).Single(w => w.id == id);
             return Ok(writer);
         }
 
         // POST: api/Writer
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post(Writer writer)
         {
+            _db.Writers.Add(writer);
+            _db.SaveChanges();
+            Response.StatusCode = 202;
+            return Accepted();
         }
 
         // PUT: api/Writer/5
