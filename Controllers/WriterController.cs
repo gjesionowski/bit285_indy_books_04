@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using IndyBooks.Models;
+using IndyBooks.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace IndyBooks.Controllers
 {
@@ -11,18 +15,24 @@ namespace IndyBooks.Controllers
     [ApiController]
     public class WriterController : ControllerBase
     {
+        private IndyBooksDataContext _db;
+        public WriterController(IndyBooksDataContext db) { _db = db; }
+
         // GET: api/Writer
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get()
         {
-            return new string[] { "value1", "value2" };
+            var writers = _db.Writers;
+            return Ok(writers); 
+                //new string[] { "value1", "value2" };
         }
 
         // GET: api/Writer/5
         [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        public IActionResult Get(long id)
         {
-            return "value";
+            var writer = _db.Writers.Select(w => new { id = w.Id, name = w.Name });
+            return Ok(writer);
         }
 
         // POST: api/Writer
